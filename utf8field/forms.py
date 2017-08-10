@@ -5,11 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 
 class UTF8FileField(FileField):
     def to_python(self, data):
-        content = data.read()
-
-        if content:
+        if data:
             try:
-                content.decode('utf-8')
+                data.read().decode('utf-8')
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
 
