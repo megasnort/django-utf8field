@@ -61,7 +61,7 @@ DATABASES = {
     }
 }
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'nl-be'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
