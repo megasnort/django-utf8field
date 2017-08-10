@@ -10,18 +10,34 @@ Django UTF-8 Field
     :target: https://coveralls.io/github/megasnort/django-utf8field?branch=master
     :alt: Coverage
 
-Sometimes you want to only allow the uploading of UTF-8 text files. This library extends the Django FileField by checking if the content of a file is UTF-8. If not, it generates an error in your form.
+Sometimes you want to only allow the uploading of UTF-8 text files. This library extends the Django FileField by checking if the content of a file is UTF-8. If not, it generates an error.
 
 Requirements
 ------------
 Django >= 1.8
 
 
+Installation
+------------
+::
+
+    pip install django-utf8field
+
 
 Usage
 -----
 
-Create a model like you would do normally, but instead of using FileField you use UTF8FileField
+Add the app to your settings:
+
+::
+
+    INSTALLED_APPS = (
+        ...
+        'utf8field',
+        ...
+
+
+Create a model like you would do normally, but instead of using FileField you use UTF8FileField:
 
 ::
 
