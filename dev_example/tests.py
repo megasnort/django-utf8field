@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import os
 
 from django.test import TestCase
-from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,7 +16,7 @@ BINARY_FILE = os.path.join('dev_example', 'tests', 'binky.png')
 
 class ViewTests(TestCase):
     def setUp(self):
-        self.url = reverse('test_view')
+        self.url = '/'
 
     def test_add_view_exists(self):
         response = self.client.get(self.url)
