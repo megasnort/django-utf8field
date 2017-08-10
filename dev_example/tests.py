@@ -1,6 +1,37 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.test import TestCase
+import os
 
-# Create your tests here.
+from django.test import TestCase
+from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+
+from .models import TestModel
+
+UTF8_OK_FILE = os.path.join('dev_example', 'tests', 'utf8_ok.txt')
+UTF8_NOK_FILE = os.path.join('dev_example', 'tests', 'utf8_nok.txt')
+
+
+class ViewTests(TestCase):
+    def setUp(self):
+        self.url = reverse('test_view')
+
+    def test_add_view_exists(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, '<input type="file"', status_code=200)
+
+    def test_add_view_works(self):
+        with open(UTF8_OK_FILE) as fp:
+            self.client.post(self.url, {'file': fp, })
+            self.assertEqual(TestModel.objects.count(), 1)
+
+    def test_add_view_shows_error_when_submitting_utf8_file(self):
+        with open(UTF8_NOK_FILE) as fp:
+            response = self.client.post(
+                self.url,
+                {'file': fp, },
+                follow=True
+            )
+            self.assertEqual(TestModel.objects.count(), 0)
+            self.assertContains(response, _('Non UTF8-content detected'))
