@@ -1,13 +1,18 @@
 language: python
 python:
+  - "2.7"
+  - "3.5"
   - "3.6"
 env:
+  - DJANGO=1.8.18
+  - DJANGO=1.9.13
+  - DJANGO=1.10.7
   - DJANGO=1.11.4
 install:
   - pip install coveralls
   - pip install -q Django==$DJANGO
   - pip install .
 script:
-  - coverage run --source=utf8field manage.py test utf8field
+  - coverage run --source=utf8field,dev_example manage.py test dev_example utf8field
 after_success:
   - coveralls
