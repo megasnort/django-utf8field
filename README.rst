@@ -16,12 +16,6 @@ Requirements
 ------------
 Django >= 1.8
 
-Installation
-------------
-
-::
-
-    pip install django-utf8field
 
 
 Usage
