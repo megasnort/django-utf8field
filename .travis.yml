@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.6"
+env:
+  - DJANGO=1.11.4
+install:
+  - pip install coveralls
+  - pip install -q Django==$DJANGO
+  - pip install .
+script:
+  - coverage run --source=utf8field manage.py test utf8field
+after_success:
+  - coveralls
