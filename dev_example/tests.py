@@ -26,6 +26,13 @@ class ViewTests(TestCase):
             self.client.post(self.url, {'file': fp, })
             self.assertEqual(TestModel.objects.count(), 1)
 
+    def test_when_sending_empty_file_when_required_utf8_shizzle_should_not_be_triggered(self):
+        with open(UTF8_OK_FILE) as fp:
+            response = self.client.post(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, _('Non UTF8-content detected'))
+            self.assertEqual(TestModel.objects.count(), 0)
+
     def test_add_view_shows_error_when_submitting_utf8_file(self):
         with open(UTF8_NOK_FILE) as fp:
             response = self.client.post(
