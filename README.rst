@@ -12,6 +12,10 @@ Django UTF-8 Field
 
 Sometimes you want to only allow the uploading of UTF-8 text files. This library extends the Django FileField by checking if the content of a file is UTF-8. If not, it generates an error in your form.
 
+Requirements
+------------
+Django >= 1.8
+
 Installation
 ------------
 
