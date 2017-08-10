@@ -23,7 +23,7 @@ class ViewTests(TestCase):
         self.assertContains(response, '<input', status_code=200, count=3)
 
     def test_add_view_works(self):
-        with open(UTF8_OK_FILE) as fp:
+        with open(UTF8_OK_FILE, 'rb') as fp:
             self.client.post(self.url, {'file': fp, })
             self.assertEqual(TestModel.objects.count(), 1)
 
@@ -33,8 +33,8 @@ class ViewTests(TestCase):
         self.assertContains(response, escape(_('This field is required.')))
         self.assertEqual(TestModel.objects.count(), 0)
 
-    def test_add_view_shows_error_when_submitting_utf8_file(self):
-        with open(UTF8_NOK_FILE) as fp:
+    def test_add_view_shows_error_when_submitting_non_utf8_file(self):
+        with open(UTF8_NOK_FILE, 'rb') as fp:
             response = self.client.post(
                 self.url,
                 {'file': fp, },
@@ -44,7 +44,7 @@ class ViewTests(TestCase):
             self.assertContains(response, escape(_('Non UTF8-content detected')))
 
     def test_add_view_shows_error_when_submitting_binary_file(self):
-        with open(BINARY_FILE ) as fp:
+        with open(BINARY_FILE, 'rb') as fp:
             response = self.client.post(
                 self.url,
                 {'file': fp, },
