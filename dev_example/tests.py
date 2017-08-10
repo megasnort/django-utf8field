@@ -21,7 +21,7 @@ class ViewTests(TestCase):
 
     def test_add_view_exists(self):
         response = self.client.get(self.url)
-        self.assertContains(response, '<input type="file"', status_code=200)
+        self.assertContains(response, '<input', status_code=200, count=3)
 
     def test_add_view_works(self):
         with open(UTF8_OK_FILE) as fp:
