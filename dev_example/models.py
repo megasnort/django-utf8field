@@ -7,4 +7,4 @@ from utf8field.fields import UTF8FileField
 
 
 class TestModel(models.Model):
-    file = UTF8FileField()
+    file = UTF8FileField(upload_to='media/')

@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.views.generic.edit import CreateView
 
-from .forms import TestForm
+from .models import TestModel
 
 
-def test_view(request):
-    form = TestForm()
-
-    return render(
-        request,
-        'dev_example/test_view.html',
-        {
-            'form': form
-        }
-    )
-
+class TestCreate(CreateView):
+    template_name = 'dev_example/test_view.html'
+    model = TestModel
+    success_url = '/'
+    fields = ['file', ]
