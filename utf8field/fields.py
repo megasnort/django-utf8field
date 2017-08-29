@@ -2,8 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-from utf8field import forms
+from django.core.exceptions import ValidationError
 
 
 class UTF8FileField(models.FileField):
@@ -20,7 +19,18 @@ class UTF8FileField(models.FileField):
             kwargs['max_content_length'] = self.max_content_length
         return name, path, args, kwargs
 
-    def formfield(self, **kwargs):
-        defaults = {'form_class': forms.UTF8FileField}
-        defaults.update(kwargs)
-        return super(UTF8FileField, self).formfield(**defaults)
+    def to_python(self, data):
+        if data:
+            try:
+                content = data.read()
+                content.decode('utf-8')
+
+                if self.max_content_length and len(content) > self.max_content_length:
+                    raise ValidationError(_(
+                        'The content of the text file cannot be longer then %(max_content_length)s characters.' % {
+                            'max_content_length': self.max_content_length}))
+
+            except UnicodeError:
+                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
+
+        return super(UTF8FileField, self).to_python(data)
