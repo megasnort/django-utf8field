@@ -51,3 +51,14 @@ Create a model like you would do normally, but instead of using FileField you us
 
 
 
+
+
+You also have the option to provide the option `max_content_length` to limit the number of characters in the file. If the content is longer an error will be displayed.
+
+::
+
+    text = models.UTF8FileField(max_content_length=1000)
+
+
+
+
