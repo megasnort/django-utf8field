@@ -10,7 +10,7 @@ Django UTF-8 Field
     :target: https://coveralls.io/github/megasnort/django-utf8field?branch=master
     :alt: Coverage
 
-Sometimes you want to only allow the uploading of UTF-8 text files. This library extends the Django FileField by checking if the content of a file is UTF-8. If not, it generates an error.
+Sometimes you want to only allow the uploading of UTF-8 text files. This library extends the Django FileField by checking if the content of a file is UTF-8. If not, it generates an error. An extra check is executed for four byte long characters, which too can cause problems when trying to process a file as UTF-8.
 
 Requirements
 ------------
@@ -62,3 +62,20 @@ You also have the option to provide the option `max_content_length` to limit the
 
 
 
+Development
+-----------
+To run the tests make sure Django is installed (`pip install django`) and execute
+
+::
+
+    python manage.py test
+
+
+To create extra translations, execute
+
+::
+
+    pm makemessages --locale=nl --extension=py --ignore=dev_example
+
+
+... and modify the resulting `django.po` file in `utf8field/locale/nl/LC_MESSAGES`.

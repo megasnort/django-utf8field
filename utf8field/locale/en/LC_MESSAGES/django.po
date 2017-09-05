@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-05 14:16+0000\n"
+"POT-Creation-Date: 2017-09-05 14:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,25 +16,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: utf8field/fields.py:17
 msgid "A text file containing only UTF-8 text"
-msgstr "Een UTF-8 tekstbestand"
+msgstr "A text file containing only UTF-text"
 
 #: utf8field/fields.py:38
-#, fuzzy
-#| msgid "Non UTF8-content detected"
 msgid "4 Byte UTF8-characters detected"
-msgstr "Het bestand was niet volledig UTF-8 valid, er werden karakters gevonden die van meer dan drie bytes lang. Een mogelijk oorzaak hiervan is kopieren/plakken vanuit andere applicaties."
+msgstr "The was file is not completely UTF-8 valid. Four byte long characters were found. A common cause is cutting/pasting from other applications."
 
 #: utf8field/fields.py:42
 #, python-format
 msgid ""
 "The content of the text file cannot be longer then %(max_content_length)s "
 "characters."
-msgstr "De inhoud van het bestand mag niet meer dan %(max_content_length)s karakters bevatten."
+msgstr ""
+"The content of the text file cannot be longer then %(max_content_length)s "
+"characters."
 
 #: utf8field/fields.py:46
 msgid "Non UTF8-content detected"
-msgstr "Er werd niet-UTF-8 inhoud gevonden in het geüploade bestand."
+msgstr "Non UTF-8-content detected"

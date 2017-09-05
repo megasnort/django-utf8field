@@ -12,6 +12,7 @@ from .models import TestModel
 UTF8_OK_BUT_TOO_LONG_FILE = os.path.join('dev_example', 'tests', 'utf8_ok_but_too_long.txt')
 UTF8_OK_FILE = os.path.join('dev_example', 'tests', 'utf8_ok.txt')
 UTF8_NOK_FILE = os.path.join('dev_example', 'tests', 'utf8_nok.txt')
+UTF8_NOK_ELS_FILE = os.path.join('dev_example', 'tests', 'els_awesome_file.txt')
 BINARY_FILE = os.path.join('dev_example', 'tests', 'binky.png')
 
 
@@ -44,6 +45,16 @@ class ViewTests(TestCase):
             )
             self.assertEqual(TestModel.objects.count(), 0)
             self.assertContains(response, escape(_('Non UTF8-content detected')))
+
+    def test_add_view_shows_error_when_submitting_els_utf8_file(self):
+        with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+            response = self.client.post(
+                self.url,
+                {'file': fp, },
+                follow=True
+            )
+            self.assertEqual(TestModel.objects.count(), 0)
+            self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
 
     def test_add_view_shows_error_when_submitting_binary_file(self):
         with open(BINARY_FILE, 'rb') as fp:
