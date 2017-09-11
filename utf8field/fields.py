@@ -13,6 +13,23 @@ def filter_using_re(unicode_string):
     return re_pattern.sub(u'\uFFFD', unicode_string)
 
 
+class UTF8CharField(models.CharField):
+    description = _('A char field containing only UTF-8 text')
+
+    def to_python(self, data):
+        if data:
+            try:
+                decoded = data.decode('utf-8')
+
+                if decoded != filter_using_re(decoded):
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='utf8')
+
+            except UnicodeError:
+                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
+
+        return super(UTF8CharField, self).to_python(data)
+
+
 class UTF8FileField(models.FileField):
     description = _('A text file containing only UTF-8 text')
 

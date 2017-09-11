@@ -37,6 +37,8 @@ Add the app to your settings:
         ...
 
 
+FileField
+---------
 Create a model like you would do normally, but instead of using FileField you use UTF8FileField:
 
 ::
@@ -50,9 +52,6 @@ Create a model like you would do normally, but instead of using FileField you us
         text = models.UTF8FileField()
 
 
-
-
-
 You also have the option to provide the option `max_content_length` to limit the number of characters in the file. If the content is longer an error will be displayed.
 
 ::
@@ -60,6 +59,23 @@ You also have the option to provide the option `max_content_length` to limit the
     text = models.UTF8FileField(max_content_length=1000)
 
 
+
+CharField
+---------
+Create a model like you would do normally, but instead of using CharField you use UTF8CharField:
+
+::
+
+    from django.db import models
+    from utf8field.fields import UTF8CharField
+
+    class YourModel(models.Model):
+        title = models.CharField(max_length=255)
+        created_on = models.DateTimeField(auto_add_on=True)
+        text = models.UTF8CharField(max_length=1000)
+
+
+Django by default does not issue a warning when submitting content longer then max_length so we don't either. (That data is cut off at the database level)  
 
 
 Development

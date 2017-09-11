@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.views.generic.edit import CreateView
 
-from .models import TestModel, TestWithMaxContentLengthModel
+from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel
 
 
 class TestCreate(CreateView):
@@ -18,3 +18,10 @@ class TestMaxContentLengthCreate(CreateView):
     model = TestWithMaxContentLengthModel
     success_url = '/max-content-length/'
     fields = ['file', ]
+
+
+class TestCreateCharField(CreateView):
+    template_name = 'dev_example/test_view.html'
+    model = TestCharFieldModel
+    success_url = '/char-field/'
+    fields = ['text', ]
