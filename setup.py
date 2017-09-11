@@ -7,8 +7,8 @@ def readme():
 
 
 setup(name='django-utf8field',
-      version='0.2.0',
-      description='Add UTF-8 Validation to a Django FileField',
+      version='0.3.0',
+      description='Add UTF-8 Validation to Django FileFields, CharFields and TextFields',
       long_description=readme(),
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -21,7 +21,7 @@ setup(name='django-utf8field',
       author='Stef Bastiaansen',
       author_email='stef@megasnort.com',
       url='https://github.com/megasnort/django-utf8field',
-      download_url='https://github.com/megasnort/django-utf8field/archive/v0.2.0.tar.gz',
+      download_url='https://github.com/megasnort/django-utf8field/archive/v0.3.0.tar.gz',
       packages=['utf8field'],
       keywords='django utf-8',
       license='Apache',
