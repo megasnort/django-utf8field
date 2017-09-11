@@ -105,7 +105,7 @@ To create extra translations, execute
 
 ::
 
-    pm makemessages --locale=nl --extension=py --ignore=dev_example
+    pm makemessages --locale=nl --extension=py --ignore=dev_example --ignore=build
 
 
 ... and modify the resulting `django.po` file in `utf8field/locale/nl/LC_MESSAGES`.

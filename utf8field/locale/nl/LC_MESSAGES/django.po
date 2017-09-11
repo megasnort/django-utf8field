@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-05 14:16+0000\n"
+"POT-Creation-Date: 2017-09-11 09:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: utf8field/fields.py:17
+#: utf8field/fields.py:18
+#| msgid "A text file containing only UTF-8 text"
+msgid "A char field containing only UTF-8 text"
+msgstr "Een tekstveld met enkel UTF-8 karakters"
+
+#: utf8field/fields.py:30 utf8field/fields.py:51 utf8field/fields.py:80
+#| msgid "Non UTF8-content detected"
+msgid "4 Byte UTF8-characters detected"
+msgstr ""
+"Het bestand was niet volledig UTF-8 valid, er werden karakters gevonden die "
+"van meer dan drie bytes lang. Een mogelijk oorzaak hiervan is kopieren/"
+"plakken vanuit andere applicaties."
+
+#: utf8field/fields.py:33 utf8field/fields.py:54 utf8field/fields.py:88
+msgid "Non UTF8-content detected"
+msgstr "Er werd niet-UTF-8 inhoud gevonden in het geüploade bestand."
+
+#: utf8field/fields.py:39
+#| msgid "A text file containing only UTF-8 text"
+msgid "A text field containing only UTF-8 text"
+msgstr "Een tekstveld met enkel UTF-8 karakters"
+
+#: utf8field/fields.py:60
 msgid "A text file containing only UTF-8 text"
 msgstr "Een UTF-8 tekstbestand"
 
-#: utf8field/fields.py:38
-#, fuzzy
-#| msgid "Non UTF8-content detected"
-msgid "4 Byte UTF8-characters detected"
-msgstr "Het bestand was niet volledig UTF-8 valid, er werden karakters gevonden die van meer dan drie bytes lang. Een mogelijk oorzaak hiervan is kopieren/plakken vanuit andere applicaties."
-
-#: utf8field/fields.py:42
+#: utf8field/fields.py:84
 #, python-format
 msgid ""
 "The content of the text file cannot be longer then %(max_content_length)s "
 "characters."
-msgstr "De inhoud van het bestand mag niet meer dan %(max_content_length)s karakters bevatten."
-
-#: utf8field/fields.py:46
-msgid "Non UTF8-content detected"
-msgstr "Er werd niet-UTF-8 inhoud gevonden in het geüploade bestand."
+msgstr ""
+"De inhoud van het bestand mag niet meer dan %(max_content_length)s karakters "
+"bevatten."
