@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from utf8field.fields import UTF8FileField, UTF8CharField
+from utf8field.fields import UTF8FileField, UTF8CharField, UTF8TextField
 
 
 class TestModel(models.Model):
@@ -16,3 +16,7 @@ class TestWithMaxContentLengthModel(models.Model):
 
 class TestCharFieldModel(models.Model):
     text = UTF8CharField(max_length=2000)
+
+
+class TestTextFieldModel(models.Model):
+    text = UTF8TextField()

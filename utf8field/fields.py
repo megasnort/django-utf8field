@@ -35,6 +35,27 @@ class UTF8CharField(models.CharField):
         return super(UTF8CharField, self).to_python(data)
 
 
+class UTF8TextField(models.TextField):
+    description = _('A text field containing only UTF-8 text')
+
+    def to_python(self, data):
+        if data:
+            try:
+                if sys.version_info >= (3, 0):
+                    # in python 3, string are actually unicode
+                    decoded = data
+                else:
+                    decoded = data.decode('utf-8')
+
+                if decoded != filter_using_re(decoded):
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='utf8')
+
+            except UnicodeError:
+                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
+
+        return super(UTF8TextField, self).to_python(data)
+
+
 class UTF8FileField(models.FileField):
     description = _('A text file containing only UTF-8 text')
 

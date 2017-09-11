@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.views.generic.edit import CreateView
 
-from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel
+from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel, TestTextFieldModel
 
 
 class TestCreate(CreateView):
@@ -24,4 +24,11 @@ class TestCreateCharField(CreateView):
     template_name = 'dev_example/test_view.html'
     model = TestCharFieldModel
     success_url = '/char-field/'
+    fields = ['text', ]
+
+
+class TestCreateTextField(CreateView):
+    template_name = 'dev_example/test_view.html'
+    model = TestTextFieldModel
+    success_url = '/text-field/'
     fields = ['text', ]

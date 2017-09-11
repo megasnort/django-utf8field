@@ -75,7 +75,21 @@ Create a model like you would do normally, but instead of using CharField you us
         text = models.UTF8CharField(max_length=1000)
 
 
-Django by default does not issue a warning when submitting content longer then max_length so we don't either. (That data is cut off at the database level)
+TextField
+---------
+Create a model like you would do normally, but instead of using TextField you use UTF8TextField:
+
+::
+
+    from django.db import models
+    from utf8field.fields import UTF8TextField
+
+    class YourModel(models.Model):
+        title = models.CharField(max_length=255)
+        created_on = models.DateTimeField(auto_add_on=True)
+        text = models.UTF8TextField()
+
+
 
 
 Development
