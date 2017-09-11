@@ -75,7 +75,7 @@ Create a model like you would do normally, but instead of using CharField you us
         text = models.UTF8CharField(max_length=1000)
 
 
-Django by default does not issue a warning when submitting content longer then max_length so we don't either. (That data is cut off at the database level)  
+Django by default does not issue a warning when submitting content longer then max_length so we don't either. (That data is cut off at the database level)
 
 
 Development
