@@ -93,6 +93,10 @@ Create a model like you would do normally, but instead of using TextField you us
 
 
 
+Django Rest Framework
+^^^^^^^^^^^^^^^^^^^^^
+The necessary serializers and automatic mapping of fields is provided so you should not be doing anything yourself to get the texts or files validated when using a ModelSerializer.
+
 
 Development
 -----------
