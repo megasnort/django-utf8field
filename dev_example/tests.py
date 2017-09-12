@@ -54,6 +54,23 @@ class RestTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
+    def test_check_for_null_character(self):
+        content = ctypes.create_unicode_buffer('String\0Other')
+
+        response = self.client.post(
+            self.url,
+            {'content': content, },
+            follow=True
+        )
+
+        result = json.loads(response.content.decode('utf-8'))
+
+        self.assertEqual(result['content'][0], _('NULL character detected'))
+        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+
+
 class TextFieldTests(TestCase):
     def setUp(self):
         self.url = '/text-field/'
