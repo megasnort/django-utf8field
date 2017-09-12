@@ -27,7 +27,10 @@ class UTF8CharField(models.CharField):
                     decoded = data.decode('utf-8')
 
                 if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='utf8')
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
+
+                if '\x00' in decoded:
+                    raise ValidationError(_('NULL character detected'), code='null')
 
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
@@ -47,8 +50,11 @@ class UTF8TextField(models.TextField):
                 else:
                     decoded = data.decode('utf-8')
 
+                if '\x00' in decoded:
+                    raise ValidationError(_('NULL character detected'), code='null')
+
                 if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='utf8')
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
 
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
@@ -77,7 +83,7 @@ class UTF8FileField(models.FileField):
                 decoded = content.decode('utf-8')
 
                 if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='utf8')
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
 
                 if self.max_content_length and len(content) > self.max_content_length:
                     raise ValidationError(_(

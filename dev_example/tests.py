@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import io
 import sys
+import ctypes
 
 from django.test import TestCase
 from django.utils.html import escape
@@ -25,6 +26,18 @@ class TextFieldTests(TestCase):
     def test_add_view_exists(self):
         response = self.client.get(self.url)
         self.assertContains(response, '<input', status_code=200)
+
+    def test_check_for_null_character(self):
+        content = ctypes.create_unicode_buffer('String\0Other')
+
+        response = self.client.post(
+            self.url,
+            {'text': content, },
+            follow=True
+        )
+
+        self.assertContains(response, escape(_('NULL character detected')))
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
     def test_add_view_works(self):
         with open(UTF8_OK_FILE, 'rb') as fp:
@@ -57,8 +70,9 @@ class TextFieldTests(TestCase):
                     {'text': str(fp.read()), },
                     follow=True
                 )
-                self.assertEqual(TestTextFieldModel.objects.count(), 0)
                 self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+                self.assertEqual(TestTextFieldModel.objects.count(), 0)
+
         else:
             with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
                 response = self.client.post(
@@ -70,15 +84,25 @@ class TextFieldTests(TestCase):
                 self.assertContains(response, escape(_('Non UTF8-content detected')))
 
 
-
 class CharFieldTests(TestCase):
     def setUp(self):
         self.url = '/char-field/'
 
-
     def test_add_view_exists(self):
         response = self.client.get(self.url)
         self.assertContains(response, '<input', status_code=200)
+
+    def test_check_for_null_character(self):
+        content = ctypes.create_unicode_buffer('String\0Other')
+
+        response = self.client.post(
+            self.url,
+            {'text': content, },
+            follow=True
+        )
+
+        self.assertContains(response, escape(_('NULL character detected')))
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
     def test_add_view_works(self):
         with open(UTF8_OK_FILE, 'rb') as fp:
@@ -123,8 +147,6 @@ class CharFieldTests(TestCase):
                 )
                 self.assertEqual(TestCharFieldModel.objects.count(), 0)
                 self.assertContains(response, escape(_('Non UTF8-content detected')))
-
-
 
 
 class FileTests(TestCase):

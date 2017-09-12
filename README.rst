@@ -10,7 +10,8 @@ Django UTF-8 Field
     :target: https://coveralls.io/github/megasnort/django-utf8field?branch=master
     :alt: Coverage
 
-Sometimes you want to only allow UTF-8 only content. This library extends the Django FileField, CharField and TextField by checking if the content of a file or text is UTF-8. If not, it generates an error. An extra check is executed for four byte long characters, which too can cause problems when trying to process a file as UTF-8.
+This package was created because at my work, `Language and Translation Technology Team`_ at the University of Ghent, we often create demos on the web that allow the user to input and process text or files. These texts are then processed by other scripts that expect clean UTF-8-texts.
+This library extends the Django FileField, CharField and TextField by checking if the content of a submitted file or text is clean UTF-8. If not, it generates an error. Extra checks are executed for four byte long characters and NULL characters.
 
 
 Requirements
@@ -110,3 +111,7 @@ To create extra translations, execute
 
 
 ... and modify the resulting `django.po` file in `utf8field/locale/nl/LC_MESSAGES`.
+
+
+
+.. _`Language and Translation Technology Team`: https://lt3.ugent.be
