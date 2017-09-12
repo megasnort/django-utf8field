@@ -47,7 +47,7 @@ class RestTests(TestCase):
                     follow=True
                 )
 
-                result = json.loads(response.content)
+                result = json.loads(response.content.decode('utf-8'))
                 self.assertEqual(result['content'][0], _('Non UTF8-content detected'))
 
         self.assertEqual(response['Content-Type'], 'application/json')
