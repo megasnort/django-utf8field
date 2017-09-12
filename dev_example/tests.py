@@ -31,24 +31,41 @@ class RestTests(TestCase):
     def test_add_view_shows_error_when_submitting_els_content_text_field(self):
         if sys.version_info >= (3, 0):
             with io.open(UTF8_NOK_ELS_FILE, 'r', encoding='utf8') as fp:
+                content = fp.read()
+                fp.seek(0)
                 response = self.client.post(
                     self.url,
-                    {'content': fp.read(), },
+                    {
+                        'text': content,
+                        'char': content,
+                        'file': fp
+
+                     },
                     follow=True
                 )
 
                 result = json.loads(response.content)
-                self.assertEqual(result['content'][0], _('4 Byte UTF8-characters detected'))
+                self.assertEqual(result['text'][0], _('4 Byte UTF8-characters detected'))
+                self.assertEqual(result['char'][0], _('4 Byte UTF8-characters detected'))
+                self.assertEqual(result['file'][0], _('4 Byte UTF8-characters detected'))
         else:
             with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+                content = str(fp.read())
+                fp.seek()
                 response = self.client.post(
                     self.url,
-                    {'content': str(fp.read()), },
+                    {
+                        'text': content,
+                        'char': content,
+                        'file': fp,
+                     },
                     follow=True
                 )
 
                 result = json.loads(response.content.decode('utf-8'))
-                self.assertEqual(result['content'][0], _('Non UTF8-content detected'))
+                self.assertEqual(result['text'][0], _('Non UTF8-content detected'))
+                self.assertEqual(result['char'][0], _('Non UTF8-content detected'))
+                self.assertEqual(result['file'][0], _('Non UTF8-content detected'))
 
         self.assertEqual(response['Content-Type'], 'application/json')
         self.assertEqual(response.status_code, 400)
@@ -59,13 +76,13 @@ class RestTests(TestCase):
 
         response = self.client.post(
             self.url,
-            {'content': content, },
+            {'text': content, },
             follow=True
         )
 
         result = json.loads(response.content.decode('utf-8'))
 
-        self.assertEqual(result['content'][0], _('NULL character detected'))
+        self.assertEqual(result['text'][0], _('NULL character detected'))
         self.assertEqual(response['Content-Type'], 'application/json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(TestTextFieldModel.objects.count(), 0)

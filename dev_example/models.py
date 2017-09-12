@@ -23,4 +23,7 @@ class TestTextFieldModel(models.Model):
 
 
 class Message(models.Model):
-    content = UTF8TextField()
+    text = UTF8CharField(blank=True, null=True, max_length=2000)
+    char = UTF8TextField(blank=True, null=True, max_length=2000)
+    file = UTF8FileField(blank=True, null=True, max_length=2000)
+
