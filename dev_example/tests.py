@@ -64,7 +64,8 @@ class RestTests(TestCase):
                     follow=True
                 )
 
-                result = json.loads(response.content)
+                result = json.loads(response.content.decode('utf-8'))
+
                 self.assertEqual(result['text'][0], _('4 Byte UTF8-characters detected'))
                 self.assertEqual(result['char'][0], _('4 Byte UTF8-characters detected'))
                 self.assertEqual(result['file'][0], _('4 Byte UTF8-characters detected'))
