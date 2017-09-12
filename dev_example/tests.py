@@ -37,7 +37,12 @@ class RestTests(TestCase):
             )
 
             self.assertEqual(Message.objects.count(), 0)
-            result = json.loads(response.content)
+
+            if sys.version_info >= (3, 0):
+                result = json.loads(response.content.decode('utf-8'))
+            else:
+                result = json.loads(response.content)
+
             self.assertTrue(result['file'][0])
 
             self.assertEqual(response['Content-Type'], 'application/json')
