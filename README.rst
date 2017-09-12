@@ -40,7 +40,7 @@ Add the app to your settings:
 
 
 FileField
----------
+^^^^^^^^^
 Create a model like you would do normally, but instead of using FileField you use UTF8FileField:
 
 ::
@@ -63,7 +63,7 @@ You also have the option to provide the option `max_content_length` to limit the
 
 
 CharField
----------
+^^^^^^^^^
 Create a model like you would do normally, but instead of using CharField you use UTF8CharField:
 
 ::
@@ -78,7 +78,7 @@ Create a model like you would do normally, but instead of using CharField you us
 
 
 TextField
----------
+^^^^^^^^^
 Create a model like you would do normally, but instead of using TextField you use UTF8TextField:
 
 ::
