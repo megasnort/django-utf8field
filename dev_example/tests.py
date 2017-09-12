@@ -66,7 +66,7 @@ class RestTests(TestCase):
         else:
             with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
                 content = str(fp.read())
-                fp.seek()
+                fp.seek(0)
                 response = self.client.post(
                     self.url,
                     {
