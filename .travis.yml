@@ -9,6 +9,7 @@ env:
   - DJANGO=1.10.7
   - DJANGO=1.11.4
 install:
+  - pip install djangorestframework==3.6.4
   - pip install coveralls
   - pip install -q Django==$DJANGO
   - pip install .

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import os
 import io
 import sys
+import json
 import ctypes
 
 from django.test import TestCase
@@ -18,6 +19,40 @@ UTF8_NOK_FILE = os.path.join('dev_example', 'tests', 'utf8_nok.txt')
 UTF8_NOK_ELS_FILE = os.path.join('dev_example', 'tests', 'els_awesome_file.txt')
 BINARY_FILE = os.path.join('dev_example', 'tests', 'binky.png')
 
+
+class RestTests(TestCase):
+    def setUp(self):
+        self.url = '/api/message/'
+
+    def test_add_view_exists(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+    def test_add_view_shows_error_when_submitting_els_content_text_field(self):
+        if sys.version_info >= (3, 0):
+            with io.open(UTF8_NOK_ELS_FILE, 'r', encoding='utf8') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'content': fp.read(), },
+                    follow=True
+                )
+
+                result = json.loads(response.content)
+                self.assertEqual(result['content'][0], _('4 Byte UTF8-characters detected'))
+        else:
+            with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'content': str(fp.read()), },
+                    follow=True
+                )
+
+                result = json.loads(response.content)
+                self.assertEqual(result['content'][0], _('Non UTF8-content detected'))
+
+        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
 class TextFieldTests(TestCase):
     def setUp(self):

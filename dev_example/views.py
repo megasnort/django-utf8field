@@ -3,7 +3,15 @@ from __future__ import unicode_literals
 
 from django.views.generic.edit import CreateView
 
-from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel, TestTextFieldModel
+from rest_framework import generics
+
+from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel, TestTextFieldModel, Message
+from .serializers import MessageSerializer
+
+
+class MessageViews(generics.CreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
 
 
 class TestCreate(CreateView):

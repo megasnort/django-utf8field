@@ -1,0 +1,5 @@
+from utf8field.fields import UTF8TextField
+from utf8field.serializer_fields import UTF8TextSerializerField
+from rest_framework.serializers import ModelSerializer
+
+ModelSerializer.serializer_field_mapping[UTF8TextField] = UTF8TextSerializerField

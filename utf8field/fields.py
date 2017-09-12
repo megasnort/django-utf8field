@@ -7,34 +7,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
-re_pattern = re.compile(u'[^\u0000-\u07FF\uE000-\uFFFF]', re.UNICODE)
-
-
-def filter_using_re(unicode_string):
-    return re_pattern.sub(u'\uFFFD', unicode_string)
+from .validators import text_input_validator, file_input_validator
 
 
 class UTF8CharField(models.CharField):
     description = _('A char field containing only UTF-8 text')
 
     def validate(self, data, model_instance):
-        if data:
-            try:
-                if sys.version_info >= (3, 0):
-                    # in python 3, string are actually unicode
-                    decoded = data
-                else:
-                    decoded = data.decode('utf-8')
-
-                if '\x00' in decoded:
-                    raise ValidationError(_('NULL character detected'), code='null')
-
-                if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
-
-            except UnicodeError:
-                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
-
+        text_input_validator(data, ValidationError)
         return super(UTF8CharField, self).validate(data, model_instance)
 
 
@@ -42,23 +22,7 @@ class UTF8TextField(models.TextField):
     description = _('A text field containing only UTF-8 text')
 
     def validate(self, data, model_instance):
-        if data:
-            try:
-                if sys.version_info >= (3, 0):
-                    # in python 3, string are actually unicode
-                    decoded = data
-                else:
-                    decoded = data.decode('utf-8')
-
-                if '\x00' in decoded:
-                    raise ValidationError(_('NULL character detected'), code='null')
-
-                if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
-
-            except UnicodeError:
-                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
-
+        text_input_validator(data, ValidationError)
         return super(UTF8TextField, self).validate(data, model_instance)
 
 
@@ -77,20 +41,5 @@ class UTF8FileField(models.FileField):
         return name, path, args, kwargs
 
     def validate(self, data, model_instance):
-        if data:
-            try:
-                content = data.read()
-                decoded = content.decode('utf-8')
-
-                if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
-
-                if self.max_content_length and len(content) > self.max_content_length:
-                    raise ValidationError(_(
-                        'The content of the text file cannot be longer then %(max_content_length)s characters.' % {
-                            'max_content_length': self.max_content_length}))
-
-            except UnicodeError:
-                raise ValidationError(_('Non UTF8-content detected'), code='utf8')
-
+        file_input_validator(data, self.max_content_length, ValidationError)
         return super(UTF8FileField, self).validate(data, model_instance)

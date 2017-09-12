@@ -16,6 +16,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'utf8field',
     'dev_example',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (

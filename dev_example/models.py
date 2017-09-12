@@ -20,3 +20,7 @@ class TestCharFieldModel(models.Model):
 
 class TestTextFieldModel(models.Model):
     text = UTF8TextField()
+
+
+class Message(models.Model):
+    content = UTF8TextField()
