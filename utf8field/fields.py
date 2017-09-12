@@ -26,11 +26,11 @@ class UTF8CharField(models.CharField):
                 else:
                     decoded = data.decode('utf-8')
 
-                if decoded != filter_using_re(decoded):
-                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
-
                 if '\x00' in decoded:
                     raise ValidationError(_('NULL character detected'), code='null')
+
+                if decoded != filter_using_re(decoded):
+                    raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
 
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')

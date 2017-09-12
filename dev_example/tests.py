@@ -62,6 +62,18 @@ class TextFieldTests(TestCase):
                 self.assertEqual(TestTextFieldModel.objects.count(), 0)
                 self.assertContains(response, escape(_('Non UTF8-content detected')))
 
+    def test_check_for_null_character_second_method(self):
+        content = 'abcd\x01\x00cdefg'
+
+        response = self.client.post(
+            self.url,
+            {'text': content, },
+            follow=True
+        )
+
+        self.assertContains(response, escape(_('NULL character detected')))
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+
     def test_add_view_shows_error_when_submitting_els_content(self):
         if sys.version_info >= (3, 0):
             with io.open(UTF8_NOK_ELS_FILE, 'r', encoding='utf8') as fp:
@@ -94,6 +106,18 @@ class CharFieldTests(TestCase):
 
     def test_check_for_null_character(self):
         content = ctypes.create_unicode_buffer('String\0Other')
+
+        response = self.client.post(
+            self.url,
+            {'text': content, },
+            follow=True
+        )
+
+        self.assertContains(response, escape(_('NULL character detected')))
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+
+    def test_check_for_null_character_second_method(self):
+        content = 'abcd\x01\x00cdefg'
 
         response = self.client.post(
             self.url,
