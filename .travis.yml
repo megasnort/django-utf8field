@@ -7,7 +7,7 @@ env:
   - DJANGO=1.8.18
   - DJANGO=1.9.13
   - DJANGO=1.10.7
-  - DJANGO=1.11.4
+  - DJANGO=1.11.5
 install:
   - pip install djangorestframework==3.6.4
   - pip install coveralls
