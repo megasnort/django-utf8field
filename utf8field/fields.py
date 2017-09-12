@@ -17,7 +17,7 @@ def filter_using_re(unicode_string):
 class UTF8CharField(models.CharField):
     description = _('A char field containing only UTF-8 text')
 
-    def to_python(self, data):
+    def validate(self, data, model_instance):
         if data:
             try:
                 if sys.version_info >= (3, 0):
@@ -32,13 +32,13 @@ class UTF8CharField(models.CharField):
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
 
-        return super(UTF8CharField, self).to_python(data)
+        return super(UTF8CharField, self).validate(data, model_instance)
 
 
 class UTF8TextField(models.TextField):
     description = _('A text field containing only UTF-8 text')
 
-    def to_python(self, data):
+    def validate(self, data, model_instance):
         if data:
             try:
                 if sys.version_info >= (3, 0):
@@ -53,7 +53,7 @@ class UTF8TextField(models.TextField):
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
 
-        return super(UTF8TextField, self).to_python(data)
+        return super(UTF8TextField, self).validate(data, model_instance)
 
 
 class UTF8FileField(models.FileField):
@@ -70,7 +70,7 @@ class UTF8FileField(models.FileField):
             kwargs['max_content_length'] = self.max_content_length
         return name, path, args, kwargs
 
-    def to_python(self, data):
+    def validate(self, data, model_instance):
         if data:
             try:
                 content = data.read()
@@ -87,4 +87,4 @@ class UTF8FileField(models.FileField):
             except UnicodeError:
                 raise ValidationError(_('Non UTF8-content detected'), code='utf8')
 
-        return super(UTF8FileField, self).to_python(data)
+        return super(UTF8FileField, self).validate(data, model_instance)
