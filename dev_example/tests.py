@@ -11,7 +11,7 @@ from django.test import TestCase
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
-from .models import TestModel, TestCharFieldModel, TestTextFieldModel
+from .models import TestModel, TestCharFieldModel, TestTextFieldModel, Message
 
 UTF8_OK_BUT_TOO_LONG_FILE = os.path.join('dev_example', 'tests', 'utf8_ok_but_too_long.txt')
 UTF8_OK_FILE = os.path.join('dev_example', 'tests', 'utf8_ok.txt')
@@ -27,6 +27,21 @@ class RestTests(TestCase):
     def test_add_view_exists(self):
         response = self.client.get(self.url)
         self.assertEqual(response['Content-Type'], 'application/json')
+
+    def test_max_content_length(self):
+        with open(UTF8_OK_BUT_TOO_LONG_FILE, 'rb') as fp:
+            response = self.client.post(
+                self.url,
+                {'file': fp},
+                follow=True
+            )
+
+            self.assertEqual(Message.objects.count(), 0)
+            result = json.loads(response.content)
+            self.assertTrue(result['file'][0])
+
+            self.assertEqual(response['Content-Type'], 'application/json')
+            self.assertEqual(response.status_code, 400)
 
     def test_add_view_shows_error_when_submitting_els_content_text_field(self):
         if sys.version_info >= (3, 0):
@@ -69,7 +84,7 @@ class RestTests(TestCase):
 
         self.assertEqual(response['Content-Type'], 'application/json')
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+        self.assertEqual(Message.objects.count(), 0)
 
     def test_check_for_null_character(self):
         content = ctypes.create_unicode_buffer('String\0Other')
