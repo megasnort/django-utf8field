@@ -6,6 +6,6 @@ try:
     ModelSerializer.serializer_field_mapping[UTF8TextField] = UTF8TextSerializerField
     ModelSerializer.serializer_field_mapping[UTF8CharField] = UTF8CharSerializerField
     ModelSerializer.serializer_field_mapping[UTF8FileField] = UTF8FileSerializerField
-except ImportError, e:
+except ImportError as e:
     # well, we won't be needing the restframework anyway
     pass
