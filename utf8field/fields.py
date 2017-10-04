@@ -1,8 +1,5 @@
 from __future__ import unicode_literals
 
-import re
-import sys
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -29,8 +26,9 @@ class UTF8TextField(models.TextField):
 class UTF8FileField(models.FileField):
     description = _('A text file containing only UTF-8 text')
 
-    def __init__(self, max_content_length=None, *args, **kwargs):
+    def __init__(self, max_content_length=None, four_byte_detection=False, *args, **kwargs):
         self.max_content_length = max_content_length
+        self.four_byte_detection = four_byte_detection
         super(UTF8FileField, self).__init__(*args, **kwargs)
 
     def deconstruct(self):
@@ -38,8 +36,12 @@ class UTF8FileField(models.FileField):
 
         if self.max_content_length:
             kwargs['max_content_length'] = self.max_content_length
+
+        if self.four_byte_detection:
+            kwargs['four_byte_detection'] = self.four_byte_detection
+
         return name, path, args, kwargs
 
     def validate(self, data, model_instance):
-        file_input_validator(data, self.max_content_length, ValidationError)
+        file_input_validator(data, self.max_content_length, self.four_byte_detection, ValidationError)
         return super(UTF8FileField, self).validate(data, model_instance)

@@ -31,13 +31,13 @@ def text_input_validator(data, ValidationError):
             raise ValidationError(_('Non UTF8-content detected'), code='utf8')
 
 
-def file_input_validator(data, max_content_length, ValidationError):
+def file_input_validator(data, max_content_length, four_byte_detection, ValidationError):
     if data:
         try:
             content = data.read()
             decoded = content.decode('utf-8')
 
-            if decoded != filter_using_re(decoded):
+            if four_byte_detection and decoded != filter_using_re(decoded):
                 raise ValidationError(_('4 Byte UTF8-characters detected'), code='4byte')
 
             if max_content_length and len(content) > max_content_length:
