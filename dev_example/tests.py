@@ -13,17 +13,25 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import TestModel, TestCharFieldModel, TestTextFieldModel, Message, PermissiveMessage
 
-UTF8_OK_BUT_TOO_LONG_FILE = os.path.join('dev_example', 'tests', 'utf8_ok_but_too_long.txt')
+UTF8_OK_BUT_TOO_LONG_FILE = os.path.join(
+    'dev_example', 'tests', 'utf8_ok_but_too_long.txt')
 UTF8_OK_FILE = os.path.join('dev_example', 'tests', 'utf8_ok.txt')
 UTF8_NOK_FILE = os.path.join('dev_example', 'tests', 'utf8_nok.txt')
-UTF8_NOK_ELS_FILE = os.path.join('dev_example', 'tests', 'els_awesome_file.txt')
+UTF8_NOK_ELS_FILE = os.path.join(
+    'dev_example', 'tests', 'els_awesome_file.txt')
 UTF8_NOK_ORPHEE_FILE = os.path.join('dev_example', 'tests', 'BNC1.txt')
 BINARY_FILE = os.path.join('dev_example', 'tests', 'binky.png')
 
 
 class RestTests(TestCase):
+
     def setUp(self):
         self.url = '/api/message/'
+
+    def tearDown(self):
+        for m in Message.objects.all():
+            if m.file:
+                os.remove(m.file.path)
 
     def test_add_view_exists(self):
         response = self.client.get(self.url)
@@ -50,18 +58,28 @@ class RestTests(TestCase):
             self.assertEqual(response.status_code, 400)
 
     def test_create_works(self):
-        with open(UTF8_OK_FILE, 'rb') as fp:
-            content = fp.read()
-            fp.seek(0)
-            response = self.client.post(
-                self.url,
-                {'file': fp, 'char': content, 'text': content},
-                follow=True
-            )
+        if sys.version_info < (3, 0):   # pragma: no cover
+            with open(UTF8_OK_FILE, 'rb') as fp:
+                content = fp.read()
+                fp.seek(0)
+                response = self.client.post(
+                    self.url,
+                    {'file': fp, 'char': content, 'text': content},
+                    follow=True
+                )
+        else:    # pragma: no cover
+            with io.open(UTF8_OK_FILE, 'r') as fp:
+                content = fp.read()
+                fp.seek(0)
+                response = self.client.post(
+                    self.url,
+                    {'file': fp, 'char': content, 'text': content},
+                    follow=True
+                )
 
-            self.assertEqual(Message.objects.count(), 1)
-            self.assertEqual(response['Content-Type'], 'application/json')
-            self.assertEqual(response.status_code, 201)
+        self.assertEqual(Message.objects.count(), 1)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response.status_code, 201)
 
     def test_add_view_shows_error_when_submitting_4_byte_content_text_field(self):
 
@@ -70,13 +88,14 @@ class RestTests(TestCase):
                 self.url,
                 {
                     'file': fp,
-                 },
+                },
                 follow=True
             )
 
             result = json.loads(response.content.decode('utf-8'))
 
-            self.assertEqual(result['file'][0], _('4 Byte UTF8-characters detected'))
+            self.assertEqual(result['file'][0], _(
+                '4 Byte UTF8-characters detected'))
 
         self.assertEqual(response['Content-Type'], 'application/json')
         self.assertEqual(response.status_code, 400)
@@ -101,6 +120,7 @@ class RestTests(TestCase):
 
 
 class TextFieldTests(TestCase):
+
     def setUp(self):
         self.url = '/text-field/'
 
@@ -160,11 +180,13 @@ class TextFieldTests(TestCase):
                     follow=True
                 )
 
-        self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+        self.assertContains(response, escape(
+            _('4 Byte UTF8-characters detected')))
         self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
 
 class CharFieldTests(TestCase):
+
     def setUp(self):
         self.url = '/char-field/'
 
@@ -224,11 +246,13 @@ class CharFieldTests(TestCase):
                     follow=True
                 )
 
-        self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+        self.assertContains(response, escape(
+            _('4 Byte UTF8-characters detected')))
         self.assertEqual(TestCharFieldModel.objects.count(), 0)
 
 
 class PermissiveMessageTests(TestCase):
+
     def setUp(self):
         self.url = '/permissive-message/'
 
@@ -267,7 +291,8 @@ class PermissiveMessageTests(TestCase):
         )
 
         self.assertEqual(PermissiveMessage.objects.count(), prev_count)
-        self.assertContains(response, _('NULL character detected'), status_code=200)
+        self.assertContains(response, _(
+            'NULL character detected'), status_code=200)
 
     def test_sending_of_4byte_character_string_as_file_should_be_possible(self):
         prev_count = PermissiveMessage.objects.count()
@@ -294,7 +319,8 @@ class PermissiveMessageTests(TestCase):
                 )
 
         self.assertEqual(PermissiveMessage.objects.count(), prev_count + 1)
-        self.assertNotContains(response, escape(_('4 Byte UTF8-characters detected')), status_code=200)
+        self.assertNotContains(response, escape(
+            _('4 Byte UTF8-characters detected')), status_code=200)
 
     def test_sending_of_utf8_characters_should_not_be_possible_in_a_file(self):
         with open(UTF8_NOK_FILE, 'rb') as fp:
@@ -306,13 +332,20 @@ class PermissiveMessageTests(TestCase):
                 follow=True
             )
             self.assertEqual(PermissiveMessage.objects.count(), prev_count)
-            self.assertContains(response, escape(_('Non UTF8-content detected')), status_code=200)
+            self.assertContains(response, escape(
+                _('Non UTF8-content detected')), status_code=200)
 
 
 class FileTests(TestCase):
+
     def setUp(self):
         self.url = '/'
         self.max_content_length_url = '/max-content-length/'
+
+    def tearDown(self):
+        for m in TestModel.objects.all():
+            if m.file:
+                os.remove(m.file.path)
 
     def test_add_view_exists(self):
         response = self.client.get(self.url)
@@ -338,7 +371,8 @@ class FileTests(TestCase):
                 follow=True
             )
             self.assertEqual(TestModel.objects.count(), 0)
-            self.assertContains(response, escape(_('Non UTF8-content detected')))
+            self.assertContains(response, escape(
+                _('Non UTF8-content detected')))
 
     def test_add_view_shows_error_when_submitting_els_utf8_file(self):
         with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
@@ -348,7 +382,8 @@ class FileTests(TestCase):
                 follow=True
             )
             self.assertEqual(TestModel.objects.count(), 0)
-            self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+            self.assertContains(response, escape(
+                _('4 Byte UTF8-characters detected')))
 
     def test_add_view_shows_error_when_submitting_binary_file(self):
         with open(BINARY_FILE, 'rb') as fp:
@@ -358,7 +393,8 @@ class FileTests(TestCase):
                 follow=True
             )
             self.assertEqual(TestModel.objects.count(), 0)
-            self.assertContains(response, escape(_('Non UTF8-content detected')))
+            self.assertContains(response, escape(
+                _('Non UTF8-content detected')))
 
     def test_max_content_length(self):
         with open(UTF8_OK_BUT_TOO_LONG_FILE, 'rb') as fp:
