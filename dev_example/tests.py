@@ -49,6 +49,20 @@ class RestTests(TestCase):
             self.assertEqual(response['Content-Type'], 'application/json')
             self.assertEqual(response.status_code, 400)
 
+    def test_create_works(self):
+        with open(UTF8_OK_FILE, 'rb') as fp:
+            content = fp.read()
+            fp.seek(0)
+            response = self.client.post(
+                self.url,
+                {'file': fp, 'char': content, 'text': content},
+                follow=True
+            )
+
+            self.assertEqual(Message.objects.count(), 1)
+            self.assertEqual(response['Content-Type'], 'application/json')
+            self.assertEqual(response.status_code, 201)
+
     def test_add_view_shows_error_when_submitting_4_byte_content_text_field(self):
 
         with open(UTF8_NOK_ORPHEE_FILE, 'rb') as fp:
