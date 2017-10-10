@@ -11,7 +11,7 @@ Django UTF-8 Field
     :alt: Coverage
 
 This package was created because at my work, `Language and Translation Technology Team`_ at the University of Ghent, we often create demos on the web that allow the user to input and process text or files. These texts are then processed by other scripts that expect clean UTF-8-texts.
-This library extends the Django FileField, CharField and TextField by checking if the content of a submitted file or text is clean UTF-8. If not, it generates an error. Extra checks are executed for four byte long characters and NULL characters.
+This library extends the Django FileField, CharField and TextField by checking if the content of a submitted file or text is clean. If not, it generates an error. Checks are executed for four byte long characters and NULL characters.
 
 
 Requirements
@@ -54,17 +54,18 @@ Create a model like you would do normally, but instead of using FileField you us
         text = models.UTF8FileField()
 
 
-You also have the option to provide the option `max_content_length` to limit the number of characters in the file. If the content is longer an error will be displayed.
+You also have the option to provide the option `max_content_length` to limit the number of characters in the file. If the content is longer an error will be displayed. If you want to enable `four_byte_detection` set the parameter to True.
+
 
 ::
 
-    text = models.UTF8FileField(max_content_length=1000)
+    text = models.UTF8FileField(max_content_length=1000, four_byte_detection=True)
 
 
 
 CharField
 ^^^^^^^^^
-Create a model like you would do normally, but instead of using CharField you use UTF8CharField:
+Create a model like you would do normally, but instead of using CharField you use UTF8CharField. If you want to enable `four_byte_detection` set the parameter to True.
 
 ::
 
@@ -72,14 +73,14 @@ Create a model like you would do normally, but instead of using CharField you us
     from utf8field.fields import UTF8CharField
 
     class YourModel(models.Model):
-        title = models.CharField(max_length=255)
+        title = models.CharField(max_length=255, four_byte_detection=True)
         created_on = models.DateTimeField(auto_add_on=True)
         text = models.UTF8CharField(max_length=1000)
 
 
 TextField
 ^^^^^^^^^
-Create a model like you would do normally, but instead of using TextField you use UTF8TextField:
+Create a model like you would do normally, but instead of using TextField you use UTF8TextField. If you want to enable `four_byte_detection` set the parameter to True.
 
 ::
 
@@ -89,7 +90,7 @@ Create a model like you would do normally, but instead of using TextField you us
     class YourModel(models.Model):
         title = models.CharField(max_length=255)
         created_on = models.DateTimeField(auto_add_on=True)
-        text = models.UTF8TextField()
+        text = models.UTF8TextField(four_byte_detection=True)
 
 
 
