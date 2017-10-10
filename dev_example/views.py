@@ -5,7 +5,8 @@ from django.views.generic.edit import CreateView
 
 from rest_framework import generics
 
-from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel, TestTextFieldModel, Message
+from .models import TestModel, TestWithMaxContentLengthModel, TestCharFieldModel, \
+    TestTextFieldModel, Message, PermissiveMessage
 from .serializers import MessageSerializer
 
 
@@ -40,3 +41,10 @@ class TestCreateTextField(CreateView):
     model = TestTextFieldModel
     success_url = '/text-field/'
     fields = ['text', ]
+
+
+class PermissiveMessageCreate(CreateView):
+    template_name = 'dev_example/test_view.html'
+    model = PermissiveMessage
+    success_url = '/permissive-message'
+    fields = ['file', 'text', 'char', ]

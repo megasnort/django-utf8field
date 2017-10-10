@@ -33,7 +33,7 @@ msgstr ""
 
 #: utf8field/fields.py:33 utf8field/fields.py:54 utf8field/fields.py:88
 msgid "Non UTF8-content detected"
-msgstr "Er werd niet-UTF-8 inhoud gevonden in het geüploade bestand."
+msgstr "Er werd niet-UTF-8 inhoud gevonden."
 
 #: utf8field/fields.py:39
 #| msgid "A text file containing only UTF-8 text"

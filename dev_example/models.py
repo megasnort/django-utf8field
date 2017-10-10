@@ -7,11 +7,11 @@ from utf8field.fields import UTF8FileField, UTF8CharField, UTF8TextField
 
 
 class TestModel(models.Model):
-    file = UTF8FileField(upload_to='media/')
+    file = UTF8FileField(upload_to='media/', four_byte_detection=True)
 
 
 class TestWithMaxContentLengthModel(models.Model):
-    file = UTF8FileField(max_content_length=1000, upload_to='media/')
+    file = UTF8FileField(max_content_length=1000, four_byte_detection=True, upload_to='media/')
 
 
 class TestCharFieldModel(models.Model):
@@ -19,11 +19,16 @@ class TestCharFieldModel(models.Model):
 
 
 class TestTextFieldModel(models.Model):
-    text = UTF8TextField()
+    text = UTF8TextField(four_byte_detection=True)
 
 
 class Message(models.Model):
-    text = UTF8CharField(blank=True, null=True, max_length=2000)
-    char = UTF8TextField(blank=True, null=True, max_length=2000)
-    file = UTF8FileField(blank=True, null=True, max_length=2000)
+    text = UTF8TextField(blank=True, null=True)
+    char = UTF8CharField(max_length=2000, blank=True, null=True)
+    file = UTF8FileField(blank=True, null=True, max_length=2000, four_byte_detection=True)
 
+
+class PermissiveMessage(models.Model):
+    text = UTF8TextField(blank=True, null=True)
+    char = UTF8CharField(max_length=2000, blank=True, null=True)
+    file = UTF8FileField(blank=True, null=True, four_byte_detection=False)

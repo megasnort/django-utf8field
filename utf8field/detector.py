@@ -21,9 +21,16 @@ class Colors:
 def main():
     try:
         content = read_file(sys.argv[1])
-        evaluation = evalutate_characters(content)
+        evaluation = evaluate_characters(content)
 
         print(get_evaluated_string(evaluation))
+
+        print('')
+        print('o ============= HELP ============= o')
+        print('| ' + Colors.WARNING + 'NULL character detected' + Colors.ENDC + '          |')
+        print('| ' + Colors.OKGREEN + '4-byte long character detected' + Colors.ENDC + '   |')
+        print('| ' + Colors.OKBLUE + 'NON-UTF-8 character detected' + Colors.ENDC + '     |')
+        print('o ================================ o')
 
     except IndexError:
         print("It's mandatory to supply a path")
@@ -50,7 +57,7 @@ def read_file(path):
         return fp.read()
 
 
-def evalutate_characters(content):
+def evaluate_characters(content):
     evaluation = []
 
     for i in content:
