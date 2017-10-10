@@ -132,15 +132,23 @@ class TextFieldTests(TestCase):
         self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
     def test_add_view_shows_error_when_submitting_els_content(self):
-        with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
-            response = self.client.post(
-                self.url,
-                {'text': fp.read(), },
-                follow=True
-            )
+        if sys.version_info < (3, 0):
+            with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'text': fp.read(), },
+                    follow=True
+                )
+        else:
+            with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'text': fp.read(), },
+                    follow=True
+                )
 
-            self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
-            self.assertEqual(TestTextFieldModel.objects.count(), 0)
+        self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+        self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
 
 class CharFieldTests(TestCase):
@@ -231,19 +239,31 @@ class PermissiveMessageTests(TestCase):
         self.assertContains(response, _('NULL character detected'), status_code=200)
 
     def test_sending_of_4byte_character_string_as_file_should_be_possible(self):
-        with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
-            text = fp.read()
-            fp.seek(0)
+        prev_count = PermissiveMessage.objects.count()
 
-            prev_count = PermissiveMessage.objects.count()
+        if sys.version_info < (3, 0):
+            with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+                text = fp.read()
+                fp.seek(0)
 
-            response = self.client.post(
-                self.url,
-                {'text': text, 'char': text, 'file': fp},
-                follow=True
-            )
-            self.assertEqual(PermissiveMessage.objects.count(), prev_count + 1)
-            self.assertNotContains(response, escape(_('4 Byte UTF8-characters detected')), status_code=200)
+                response = self.client.post(
+                    self.url,
+                    {'text': text, 'char': text, 'file': fp},
+                    follow=True
+                )
+        else:
+            with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:
+                text = fp.read()
+                fp.seek(0)
+
+                response = self.client.post(
+                    self.url,
+                    {'text': text, 'char': text, 'file': fp},
+                    follow=True
+                )
+
+        self.assertEqual(PermissiveMessage.objects.count(), prev_count + 1)
+        self.assertNotContains(response, escape(_('4 Byte UTF8-characters detected')), status_code=200)
 
     def test_sending_of_utf8_characters_should_not_be_possible_in_a_file(self):
         with open(UTF8_NOK_FILE, 'rb') as fp:
