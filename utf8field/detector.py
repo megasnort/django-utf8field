@@ -25,13 +25,6 @@ def main():
 
         print(get_evaluated_string(evaluation))
 
-        print('')
-        print('o ============= HELP ============= o')
-        print('| ' + Colors.WARNING + 'NULL character detected' + Colors.ENDC + '          |')
-        print('| ' + Colors.OKGREEN + '4-byte long character detected' + Colors.ENDC + '   |')
-        print('| ' + Colors.OKBLUE + 'NON-UTF-8 character detected' + Colors.ENDC + '     |')
-        print('o ================================ o')
-
     except IndexError:
         print("It's mandatory to supply a path")
 
@@ -53,8 +46,16 @@ def get_evaluated_string(evaluation):
 
 
 def read_file(path):
-    with io.open(path, mode='r', encoding='utf-8') as fp:
-        return fp.read()
+    try:
+        with io.open(path, mode='r', encoding='utf-8') as fp:
+            return fp.read()
+    except UnicodeDecodeError:
+        try:
+            with open(path, mode='r') as fp:
+                return fp.read()
+        except UnicodeDecodeError:
+            print(path + ' seems to be a non UTF-8 file')
+            exit()
 
 
 def evaluate_characters(content):
