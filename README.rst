@@ -101,7 +101,7 @@ The necessary serializers and automatic mapping of fields is provided so you sho
 
 Development
 -----------
-To run the tests make sure Django and the Django Rest Framework are installed (`pip install django djangorestframework`) and execute
+To run the tests make sure Django, Django Rest Framework and coverage are installed (`pip install django djangorestframework coverage`) and execute
 
 ::
 
