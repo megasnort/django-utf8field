@@ -205,8 +205,6 @@ class CharFieldTests(TestCase):
             follow=True
         )
 
-        print response.content
-
         self.assertEqual(TestCharFieldModel.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
 
