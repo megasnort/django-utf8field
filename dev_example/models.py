@@ -15,7 +15,7 @@ class TestWithMaxContentLengthModel(models.Model):
 
 
 class TestCharFieldModel(models.Model):
-    text = UTF8CharField(max_length=2000)
+    char = UTF8CharField(max_length=2000, four_byte_detection=True)
 
 
 class TestTextFieldModel(models.Model):

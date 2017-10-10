@@ -33,7 +33,7 @@ class TestCreateCharField(CreateView):
     template_name = 'dev_example/test_view.html'
     model = TestCharFieldModel
     success_url = '/char-field/'
-    fields = ['text', ]
+    fields = ['char', ]
 
 
 class TestCreateTextField(CreateView):

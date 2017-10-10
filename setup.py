@@ -1,12 +1,12 @@
-from setuptools import setup
+from setuptools import setup            # pragma: no cover
 
 
-def readme():
+def readme():                           # pragma: no cover
     with open('README.rst') as f:
         return f.read()
 
 
-setup(name='django-utf8field',
+setup(name='django-utf8field',          # pragma: no cover
       version='1.0.0',
       description='Add UTF-8 Validation to Django FileFields, CharFields and TextFields',
       long_description=readme(),

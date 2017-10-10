@@ -6,7 +6,6 @@ import io
 import sys
 import json
 import ctypes
-import unittest
 
 from django.test import TestCase
 from django.utils.html import escape
@@ -40,7 +39,7 @@ class RestTests(TestCase):
 
             self.assertEqual(Message.objects.count(), 0)
 
-            if sys.version_info >= (3, 0):
+            if sys.version_info >= (3, 0):  # pragma: no cover
                 result = json.loads(response.content.decode('utf-8'))
             else:
                 result = json.loads(response.content)
@@ -132,14 +131,14 @@ class TextFieldTests(TestCase):
         self.assertEqual(TestTextFieldModel.objects.count(), 0)
 
     def test_add_view_shows_error_when_submitting_els_content(self):
-        if sys.version_info < (3, 0):
+        if sys.version_info < (3, 0):   # pragma: no cover
             with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
                 response = self.client.post(
                     self.url,
                     {'text': fp.read(), },
                     follow=True
                 )
-        else:
+        else:    # pragma: no cover
             with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:
                 response = self.client.post(
                     self.url,
@@ -164,37 +163,57 @@ class CharFieldTests(TestCase):
 
         response = self.client.post(
             self.url,
-            {'text': content, },
+            {'char': content, },
             follow=True
         )
 
         self.assertContains(response, escape(_('NULL character detected')))
-        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+        self.assertEqual(TestCharFieldModel.objects.count(), 0)
 
     def test_check_for_null_character_second_method(self):
         content = 'abcd\x01\x00cdefg'
 
         response = self.client.post(
             self.url,
-            {'text': content, },
+            {'char': content, },
             follow=True
         )
 
         self.assertContains(response, escape(_('NULL character detected')))
-        self.assertEqual(TestTextFieldModel.objects.count(), 0)
+        self.assertEqual(TestCharFieldModel.objects.count(), 0)
 
     def test_add_view_works(self):
-        with open(UTF8_OK_FILE, 'rb') as fp:
-            response = self.client.post(
-                self.url,
-                {
-                    'text': fp.read()
-                },
-                follow=True
-            )
+        response = self.client.post(
+            self.url,
+            {
+                'char': 'Een kei simpel tekstje'
+            },
+            follow=True
+        )
 
-            self.assertEqual(TestCharFieldModel.objects.count(), 1)
-            self.assertEqual(response.status_code, 200)
+        print response.content
+
+        self.assertEqual(TestCharFieldModel.objects.count(), 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_view_shows_error_when_submitting_els_content(self):
+        if sys.version_info < (3, 0):   # pragma: no cover
+            with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'char': fp.read(), },
+                    follow=True
+                )
+        else:    # pragma: no cover
+            with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:
+                response = self.client.post(
+                    self.url,
+                    {'char': fp.read(), },
+                    follow=True
+                )
+
+        self.assertContains(response, escape(_('4 Byte UTF8-characters detected')))
+        self.assertEqual(TestCharFieldModel.objects.count(), 0)
 
 
 class PermissiveMessageTests(TestCase):
@@ -241,7 +260,7 @@ class PermissiveMessageTests(TestCase):
     def test_sending_of_4byte_character_string_as_file_should_be_possible(self):
         prev_count = PermissiveMessage.objects.count()
 
-        if sys.version_info < (3, 0):
+        if sys.version_info < (3, 0):    # pragma: no cover
             with open(UTF8_NOK_ELS_FILE, 'rb') as fp:
                 text = fp.read()
                 fp.seek(0)
@@ -252,7 +271,7 @@ class PermissiveMessageTests(TestCase):
                     follow=True
                 )
         else:
-            with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:
+            with io.open(UTF8_NOK_ELS_FILE, 'r') as fp:  # pragma: no cover
                 text = fp.read()
                 fp.seek(0)
 

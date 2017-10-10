@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 import re
-import sys
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -14,23 +13,13 @@ def filter_using_re(unicode_string):
 
 def text_input_validator(data, four_byte_detection, ValidationError):
     if data:
-        try:
-            # if sys.version_info >= (3, 0):
-            #     # in python 3, string are actually unicode
-            #     decoded = data
-            # else:
-            #     print isinstance(data, unicode)
-            #     decoded = data.decode('utf-8')
-            if '\x00' in data:
-                raise ValidationError(
-                    _('NULL character detected'), code='null')
+        if '\x00' in data:
+            raise ValidationError(
+                _('NULL character detected'), code='null')
 
-            if four_byte_detection and data != filter_using_re(data):
-                raise ValidationError(
-                    _('4 Byte UTF8-characters detected'), code='4byte')
-
-        except UnicodeError:
-            raise ValidationError(_('Non UTF8-content detected'), code='utf8')
+        if four_byte_detection and data != filter_using_re(data):
+            raise ValidationError(
+                _('4 Byte UTF8-characters detected'), code='4byte')
 
 
 def file_input_validator(data, max_content_length, four_byte_detection, ValidationError):
